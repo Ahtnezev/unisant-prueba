@@ -10,18 +10,18 @@ return new class extends Migration
     {
         Schema::create('alumnos', function (Blueprint $table) {
             $table->id();
-            $table->text('matricula');
-            $table->text('nombre_completo');
-            $table->text('apat');
-            $table->text('amat');
-            $table->text('curp')->nullable();
-            $table->text('email')->nullable();
-            $table->text('telefono')->nullable();
+            $table->string('matricula');
+            $table->string('nombre_completo');
+            $table->string('apat');
+            $table->string('amat');
+            $table->string('curp')->unique();
+            $table->string('email')->unique();
+            $table->string('telefono')->nullable();
             $table->integer('sede_id');
             $table->integer('organizacion_id')->nullable();
             $table->date('fecha_nacimiento')->nullable();
             $table->date('fecha_inscripcion')->nullable();
-            $table->text('estado')->default('activo');
+            $table->enum('estado', ['activo', 'inactivo', 'suspendido'])->default('activo');
             $table->text('tags')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->id();
-            $table->text('matricula');
+            $table->string('matricula');
             $table->text('concepto');
             $table->text('monto');
             $table->text('fecha_pago');
             $table->text('metodo')->nullable();
             $table->integer('sede_id')->nullable();
             $table->integer('conciliacion_id')->nullable();
-            $table->text('estado')->default('activo');
+            $table->enum('estado', ['activo', 'inactivo', 'completed', 'pending'])->default('activo');
             $table->text('nota')->nullable();
             $table->text('chunk')->nullable();
             $table->timestamps();

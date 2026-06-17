@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->text('filtros')->nullable();
             $table->text('resultado')->nullable();
-            $table->text('estado')->default('pendiente');
+            $table->enum('estado', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente');
             $table->timestamps();
         });
     }

@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('adeudos', function (Blueprint $table) {
             $table->id();
             $table->integer('alumno_id');
-            $table->text('nombre');
-            $table->float('monto', 11, 2);
+            $table->string('nombre');
+            $table->decimal('monto', 11, 2);
             $table->integer('plazos');
             $table->date('desde')->nullable();
             $table->integer('dias')->default(31);
