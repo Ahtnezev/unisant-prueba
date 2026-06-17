@@ -24,7 +24,7 @@
         <div class="card text-white bg-success">
             <div class="card-body">
                 <h5 class="card-title">Pagos del Mes</h5>
-                <p class="card-text display-4">${{ $pagosMes }}</p>
+                <p class="card-text display-4">${{ number_format($pagosMes, 2) }}</p>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
         <div class="card text-white bg-warning">
             <div class="card-body">
                 <h5 class="card-title">Inscripciones</h5>
-                <p class="card-text display-4">{{ $totalInscripciones }}</p>
+                <p class="card-text display-4">{{ number_format($totalInscripciones, 0) }}</p>
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SII Prueba Técnica')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -16,6 +17,12 @@
                     <li class="nav-item"><a class="nav-link" href="/alumnos">Alumnos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/programas">Programas</a></li>
                     <li class="nav-item"><a class="nav-link" href="/pagos/create">Pagos</a></li>
+                    <form method="POST" action="/logout">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </button>
+                    </form>
                 </ul>
             </div>
         </div>
@@ -26,5 +33,6 @@
         @endif
         @yield('content')
     </div>
+    @stack('js')
 </body>
 </html>
