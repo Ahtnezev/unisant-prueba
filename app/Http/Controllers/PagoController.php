@@ -11,31 +11,46 @@ class PagoController extends Controller
 {
     public function create()
     {
-        $alumnos = Alumno::all();
+        $alumnos = Alumno::select(['nombre_completo', 'curp', 'matricula'])
+            ->activos()
+            ->where('nombre_completo', '!=', null)
+            ->where('curp', '!=', null)
+            ->get()
+            ->unique('curp')
+            ->values();
+
         return view('pagos.create', compact('alumnos'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'matricula' => 'required',
-            'monto' => 'required',
+            'matricula' => 'required|string|max:255|exists:alumnos,matricula',
+            'concepto' => 'required',
+            'monto' => 'numeric|min:0|max:999999.99',
+            'fecha_pago' => 'required|date|before_or_equal:today|after_or_equal:' . now()->subMonth()->toDateString(),
+            'metodo' => 'in:efectivo,transferencia,tarjeta',
+            'sede_id' => 'required|numeric|min:0'
         ]);
 
-        $alumno = Alumno::where('matricula', $request->input('matricula'))->first();
-        $monto = (float) $request->input('monto');
+        // no se valida ya que en el request se valida que exista la matricula
+        // $alumno = Alumno::firstWhere('matricula', $request->input('matricula'));
+        // if ($alumno) {
+        //     return redirect()->route('pagos.create')->with('fail', 'Alumno no encontrado.');
+        // }
+        $monto = (float) $request->monto;
 
         $pago = Pago::create([
             'matricula' => $request->input('matricula'),
             'concepto' => $request->input('concepto', 'Pago general'),
-            'monto' => $request->input('monto'),
+            'monto' => $monto,
             'fecha_pago' => $request->input('fecha_pago', now()),
             'metodo' => $request->input('metodo', 'efectivo'),
             'sede_id' => $request->input('sede_id'),
-            'estado' => 'activo',
+            'estado' => 'activo', // crear un enum para manejar estados o en el mismo modelo
         ]);
 
-        $comision = $request->input('monto') * 0.05;
+        $comision = round($request->input('monto') * 0.05, 2);
         $pago->nota = 'Comisión: ' . $comision;
         $pago->save();
 

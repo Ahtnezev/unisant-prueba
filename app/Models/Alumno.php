@@ -13,6 +13,18 @@ class Alumno extends Model
         'fecha_nacimiento', 'fecha_inscripcion', 'estado', 'tags'
     ];
 
+    public function scopeTotalAlumnos(): int {
+        return $this->all()->count();
+    }
+
+    public function scopeActivosCount(): int {
+        return $this->where('estado', 'activo')->count();
+    }
+
+    public function scopeActivos() {
+        return $this->where('estado', 'activo');
+    }
+
     public function sede()
     {
         return $this->belongsTo(Sede::class, 'sede_id');

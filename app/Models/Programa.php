@@ -14,4 +14,9 @@ class Programa extends Model
         return $this->belongsToMany(Materia::class, 'programa_materia');
     }
 
+    public function inscripciones()
+    {
+        return $this->hasMany(Inscripcion::class);
+    }
+
 }
