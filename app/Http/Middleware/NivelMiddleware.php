@@ -10,16 +10,20 @@ class NivelMiddleware
 {
     public function handle(Request $request, Closure $next, string $nivel): Response
     {
+        if (!$request->user()) {
+            return redirect()->route('login');
+        }
+
         $user = $request->user();
 
-        if ($user->nivel_id == $nivel) {
+        if ($user->nivel_id === null) {
+            return redirect()->route('login')->with('error', 'Usuario sin nivel asignado');
+        }
+
+        if ((int) $user->nivel_id === (int) $nivel) {
             return $next($request);
         }
 
-        if ($user->nivel_id == null) {
-            return redirect('/login');
-        }
-
-        return redirect('/dashboard');
+        return redirect('/login')->with('error', 'Acceso no autorizado');
     }
 }
