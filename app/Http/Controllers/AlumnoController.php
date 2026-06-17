@@ -8,6 +8,7 @@ use App\Models\Inscripcion;
 use App\Models\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class AlumnoController extends Controller
 {
@@ -53,39 +54,77 @@ class AlumnoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre_completo' => 'required',
-            'matricula' => 'required',
-            'sede_id' => 'required',
+        $validated = $request->validate([
+            'matricula' => 'required|string|max:20|unique:alumnos,matricula',
+            'nombre_completo' => 'required|string|max:255',
+            'apat' => 'required|string|max:100',
+            'amat' => 'required|string|max:100',
+            'curp' => 'required|string|size:18|unique:alumnos,curp',
+            'email' => 'required|email|max:255|unique:alumnos,email',
+            'telefono' => 'required|string|max:15',
+            'sede_id' => 'required|exists:sedes,id',
+            'fecha_nacimiento' => 'nullable|date', //|before:today
+            'programa_id' => 'nullable', //exists:programas,id
+            'monto_inicial' => 'nullable|numeric|min:0|max:999999.99',
+        ], [
+            'matricula.unique' => 'Esta matrícula ya está registrada',
+            'curp.unique' => 'Esta CURP ya está registrada',
+            'email.unique' => 'Este email ya está registrado',
+            'sede_id.exists' => 'La sede seleccionada no existe',
+            'programa_id.exists' => 'El programa seleccionado no existe',
+            'fecha_nacimiento.before' => 'La fecha de nacimiento debe ser anterior a hoy',
         ]);
 
-        $alumno = Alumno::create($request->only([
-            'matricula', 'nombre_completo', 'apat', 'amat',
-            'curp', 'email', 'telefono', 'sede_id', 'fecha_nacimiento'
-        ]));
+        try {
+            DB::beginTransaction();
 
-        if ($request->has('programa_id')) {
-            Inscripcion::create([
-                'alumno_id' => $alumno->id,
-                'programa_id' => $request->input('programa_id'),
-                'sede_id' => $request->input('sede_id'),
-                'estado' => 'activo',
-                'fecha_inscripcion' => now(),
-            ]);
-        }
-
-        if ($request->has('monto_inicial')) {
-            Pago::create([
-                'matricula' => $alumno->matricula,
-                'concepto' => 'Inscripción',
-                'monto' => $request->input('monto_inicial'),
-                'fecha_pago' => now(),
-                'sede_id' => $request->input('sede_id'),
+            $alumno = Alumno::create([
+                'matricula' => $validated['matricula'],
+                'nombre_completo' => $validated['nombre_completo'],
+                'apat' => $validated['apat'] ?? null,
+                'amat' => $validated['amat'] ?? null,
+                'curp' => $validated['curp'] ?? null,
+                'email' => $validated['email'] ?? null,
+                'telefono' => $validated['telefono'] ?? null,
+                'sede_id' => $validated['sede_id'],
+                'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
                 'estado' => 'activo',
             ]);
-        }
 
-        return redirect('/alumnos')->with('success', 'Alumno creado');
+            if (!empty($validated['programa_id'])) {
+                $inscripcion = Inscripcion::create([
+                    'alumno_id' => $alumno->id,
+                    'programa_id' => $validated['programa_id'],
+                    'sede_id' => $validated['sede_id'],
+                    'estado' => 'activo',
+                    'fecha_inscripcion' => now(),
+                ]);
+            }
+
+            if (!empty($validated['monto_inicial']) && $validated['monto_inicial'] > 0) {
+                Pago::create([
+                    'matricula' => $alumno->matricula,
+                    'concepto' => 'Inscripción inicial',
+                    'monto' => $validated['monto_inicial'],
+                    'fecha_pago' => now(),
+                    'sede_id' => $validated['sede_id'],
+                    'estado' => 'completed',
+                    'metodo' => $request->input('tipo_pago', 'efectivo'),
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('alumnos.index')
+                ->with('success', 'Alumno creado exitosamente');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error al crear el alumno: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)
@@ -96,7 +135,6 @@ class AlumnoController extends Controller
         }
         $alumno->delete();
 
-        // podemos avisar que si se elimino correctamente...
         return redirect()->route('alumnos.index');
     }
 }
