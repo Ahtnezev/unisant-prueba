@@ -38,5 +38,11 @@ Route::get('/api/alumnos/{matricula}/pagos', [AlumnoApiController::class, 'pagos
 
 Route::view('/login', 'auth.login')->name('login');
 Route::view('/register', 'auth.register')->name('register');
+Route::post('/logout', function () {
+    auth()->logout();
+    session()->invalidate();
+    session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
 
 require __DIR__.'/auth.php';

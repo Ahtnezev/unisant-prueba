@@ -16,6 +16,12 @@
                     <li class="nav-item"><a class="nav-link" href="/alumnos">Alumnos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/programas">Programas</a></li>
                     <li class="nav-item"><a class="nav-link" href="/pagos/create">Pagos</a></li>
+                    <form method="POST" action="/logout">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </button>
+                    </form>
                 </ul>
             </div>
         </div>
