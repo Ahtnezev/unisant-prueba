@@ -133,6 +133,11 @@ class AlumnoController extends Controller
         if (!$alumno) {
             return redirect()->route('alumnos.index')->with('fail', 'Error al eliminar usuario, intente más tarde.');
         }
+
+        if ($alumno->pagos()->where('estado', 'activo')->count() > 0) {
+            return redirect()->route('alumnos.index')->with('fail', 'No se puede eliminar alumno con pagos pendientes.');
+        }
+
         $alumno->delete();
 
         return redirect()->route('alumnos.index');

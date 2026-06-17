@@ -25,6 +25,9 @@ return new class extends Migration
             $table->text('tags')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('matricula');
+            $table->index('sede_id');
         });
     }
 
