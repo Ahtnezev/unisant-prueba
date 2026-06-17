@@ -18,6 +18,8 @@ return new class extends Migration
             $table->date('fecha_termino')->nullable();
             $table->text('observaciones')->nullable();
             $table->timestamps();
+
+            $table->index('alumno_id');
         });
     }
 
