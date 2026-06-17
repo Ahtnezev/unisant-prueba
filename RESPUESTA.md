@@ -23,6 +23,7 @@
     $table->string('telefono')->nullable();`
 
 - se agregan los indices en las tablas: alumnos(matricula, sede_id), pagos(matricula), inscripciones(alumno_id)
+- Se crea service de alumnoController para tener mayor legibilidad y mantenibilidad del codigo a futuro, se pasa logica al controller y despues se inyecta en el appServiceProvider
    
 ### Auth:
 
@@ -111,3 +112,8 @@ AlumnoApiController@show / @pagos, se agrega mejora considerable porque antes no
 en caso de no encontrar al alumno, saber si el usuario estaba activo o no, sin manejo de excepciones, se pueden tambien 
 agregar mensajes falsos-positivos, donde tampoco es bueno especificar demasiado el error ya que atacantes pueden
 guiarse de eso y facilitarle un acceso no autorizado.
+
+
+### JOBS:
+
+- `GenerarReporteDeudasJob`, se agrega chunk de cada 200 registros, se manejan excepciones en caso que algo fallara se registra en el Log con los detalles del error, el chunk se utiliza para no saturar la DB de cientos o miles de operaciones por segundo
