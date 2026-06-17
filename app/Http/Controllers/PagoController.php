@@ -33,11 +33,11 @@ class PagoController extends Controller
             'sede_id' => 'required|numeric|min:0'
         ]);
 
-        // no se valida ya que en el request se valida que exista la matricula
-        // $alumno = Alumno::firstWhere('matricula', $request->input('matricula'));
-        // if ($alumno) {
-        //     return redirect()->route('pagos.create')->with('fail', 'Alumno no encontrado.');
-        // }
+        //  el request se valida que exista la matricula
+        $alumno = Alumno::firstWhere('matricula', $request->input('matricula'));
+        if ($alumno) {
+            return redirect()->route('pagos.create')->with('fail', 'Alumno no encontrado.');
+        }
         $monto = (float) $request->monto;
 
         $pago = Pago::create([
@@ -59,7 +59,10 @@ class PagoController extends Controller
 
     public function index()
     {
-        $pagos = Pago::orderBy('id', 'desc')->get();
+        $pagos = Pago::with(['alumno'])
+            ->orderBy('id', 'desc')
+            ->paginate(5);
+
         return view('pagos.index', compact('pagos'));
     }
 }

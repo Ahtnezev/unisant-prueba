@@ -34,4 +34,8 @@ class Alumno extends Model
     {
         return $this->hasMany(Inscripcion::class, 'alumno_id');
     }
+
+    public function pagos(){
+        return $this->hasMany(Pago::class, 'matricula', 'matricula');
+    }
 }

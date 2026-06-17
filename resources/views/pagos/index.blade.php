@@ -20,11 +20,14 @@
         <tr>
             <td>{{ $pago->matricula }}</td>
             <td>{{ $pago->concepto }}</td>
-            <td>${{ $pago->monto }}</td>
+            <td>${{ number_format($pago->monto, 2) }}</td>
             <td>{{ $pago->fecha_pago }}</td>
             <td>{{ $pago->estado }}</td>
         </tr>
         @endforeach
     </tbody>
 </table>
+
+{{ $pagos->links() }}
+
 @endsection
