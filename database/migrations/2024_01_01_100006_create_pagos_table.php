@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('matricula');
             $table->text('concepto');
-            $table->text('monto');
-            $table->text('fecha_pago');
+            $table->decimal('monto', 11, 2);
+            $table->date('fecha_pago');
             $table->text('metodo')->nullable();
             $table->integer('sede_id')->nullable();
             $table->integer('conciliacion_id')->nullable();
