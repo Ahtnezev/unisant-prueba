@@ -22,7 +22,7 @@ class Alumno extends Model
     }
 
     public function scopeActivos() {
-        return $this->where('estado', 'activo');
+        return $this->where('estado', 'activo')->where('nombre_completo', '!=', '');
     }
 
     public function sede()

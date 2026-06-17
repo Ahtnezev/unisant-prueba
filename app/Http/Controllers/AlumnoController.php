@@ -7,31 +7,47 @@ use App\Models\Sede;
 use App\Models\Inscripcion;
 use App\Models\Pago;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AlumnoController extends Controller
 {
     public function index(Request $request)
     {
         $query = Alumno::query();
-        $alumnos = $query->get();
+        $query->where('estado', 'activo')
+            ->whereNotNull('nombre_completo')
+            ->where('nombre_completo', '!=', '');
 
-        if ($request->has('buscar')) {
-            $buscar = $request->input('buscar');
-            $query->whereRaw("nombre_completo LIKE '%" . $buscar . "%'");
+        if ($request->has('buscar') && $request->filled('buscar')) {
+            $buscar = trim($request->input('buscar'));
+            $query->where('nombre_completo', 'LIKE', '%' . $buscar . '%');
+            $query->orWhere('matricula', 'LIKE', '%' . $buscar . '%');
         }
 
-        if ($request->has('sede_id')) {
-            $alumnos = $alumnos->where('sede_id', $request->input('sede_id'));
+        if ($request->has('sede_id') && $request->filled('sede_id')) {
+            $query->where('sede_id', $request->input('sede_id'));
         }
 
-        $sedes = Sede::all();
+        $alumnos = $query->get()->unique('curp')->values();
+
+        $page = request()->input('page', 1);
+        $perPage = 5;
+        $alumnos = new LengthAwarePaginator(
+            $alumnos->forPage($page, $perPage),
+            $alumnos->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $sedes = Sede::activas()->get();
 
         return view('alumnos.index', compact('alumnos', 'sedes'));
     }
 
     public function create()
     {
-        $sedes = Sede::all();
+        $sedes = Sede::activas()->get();
         return view('alumnos.create', compact('sedes'));
     }
 
@@ -75,8 +91,12 @@ class AlumnoController extends Controller
     public function destroy($id)
     {
         $alumno = Alumno::find($id);
+        if (!$alumno) {
+            return redirect()->route('alumnos.index')->with('fail', 'Error al eliminar usuario, intente más tarde.');
+        }
         $alumno->delete();
 
-        return redirect('/alumnos');
+        // podemos avisar que si se elimino correctamente...
+        return redirect()->route('alumnos.index');
     }
 }
