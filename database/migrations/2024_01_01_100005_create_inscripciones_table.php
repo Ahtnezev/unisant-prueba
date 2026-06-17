@@ -13,7 +13,7 @@ return new class extends Migration
             $table->integer('alumno_id');
             $table->integer('programa_id');
             $table->integer('sede_id');
-            $table->text('estado')->default('activo');
+            $table->enum('estado', ['activo', 'inactivo'])->default('activo');
             $table->date('fecha_inscripcion')->nullable();
             $table->date('fecha_termino')->nullable();
             $table->text('observaciones')->nullable();

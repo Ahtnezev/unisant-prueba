@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('objetivo')->nullable();
-            $table->float('inscripcion', 11, 2)->default(0);
-            $table->float('precio_materia', 11, 2)->default(0);
-            $table->float('precio_materia_reprobada', 11, 2)->default(0);
+            $table->decimal('inscripcion', 11, 2)->default(0);
+            $table->decimal('precio_materia', 11, 2)->default(0);
+            $table->decimal('precio_materia_reprobada', 11, 2)->default(0);
             $table->integer('plazos_colegiatura')->nullable();
             $table->integer('minima')->default(6);
             $table->integer('limite_pago')->default(5);
