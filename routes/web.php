@@ -33,8 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/buscar-alumnos', [ReporteController::class, 'buscarAlumnosGlobal'])->name('api.buscar');
 });
 
-Route::get('/api/alumnos/{matricula}', [AlumnoApiController::class, 'show']);
-Route::get('/api/alumnos/{matricula}/pagos', [AlumnoApiController::class, 'pagos']);
+// Route::get('/api/alumnos/{matricula}', [AlumnoApiController::class, 'show']);
+// Route::get('/api/alumnos/{matricula}/pagos', [AlumnoApiController::class, 'pagos']);
 
 Route::view('/login', 'auth.login')->name('login');
 Route::view('/register', 'auth.register')->name('register');
