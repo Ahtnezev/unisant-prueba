@@ -21,6 +21,10 @@ class Alumno extends Model
         return $this->where('estado', 'activo')->count();
     }
 
+    public function scopeActivos() {
+        return $this->where('estado', 'activo');
+    }
+
     public function sede()
     {
         return $this->belongsTo(Sede::class, 'sede_id');
