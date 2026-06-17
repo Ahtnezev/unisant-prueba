@@ -12,6 +12,10 @@ class Inscripcion extends Model
         'estado', 'fecha_inscripcion', 'fecha_termino', 'observaciones'
     ];
 
+    public function scopeActivos() {
+        return $this->where('estado', 'activo');
+    }
+
     public function alumno()
     {
         return $this->belongsTo(Alumno::class, 'alumno_id');

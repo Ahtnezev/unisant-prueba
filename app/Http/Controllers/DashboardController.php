@@ -12,26 +12,24 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $alumnosActivos = Alumno::where('estado', 'activo')->count();
-        $totalAlumnos = Alumno::all()->count();
-        $pagosMes = Pago::where('estado', 'activo')
-            ->where('fecha_pago', '>=', now()->startOfMonth())
-            ->where('fecha_pago', '<=', now()->endOfMonth())
-            ->sum('monto');
+        $alumnosActivos = Alumno::activosCount();
+        $totalAlumnos = Alumno::totalAlumnos();
+        $pagosMes = Pago::activos()->delMesActual()->sum('monto');
 
-        $inscripcionesPendientes = Inscripcion::where('estado', 'activo')->get();
+        $inscripcionesPendientes = Inscripcion::activos()->get();
         $totalInscripciones = count($inscripcionesPendientes);
 
-        $pagos = Pago::all();
+        $pagos = Pago::all('monto');
         $suma = 0;
         foreach ($pagos as $pago) {
             $suma += (float) $pago->monto;
         }
         $promedioPago = count($pagos) > 0 ? $suma / count($pagos) : 0;
 
-        $programasTop = Programa::all()->sortByDesc(function($p) {
-            return $p->inscripciones->count();
-        })->take(5);
+        $programasTop = Programa::withCount('inscripciones')
+            ->orderBy('inscripciones_count', 'desc')
+            ->take(5)
+            ->get();
 
         return view('dashboard.index', compact(
             'alumnosActivos', 'totalAlumnos', 'pagosMes',

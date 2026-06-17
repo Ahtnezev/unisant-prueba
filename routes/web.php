@@ -12,9 +12,9 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
 Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/alumnos', [AlumnoController::class, 'index'])->name('alumnos.index');
     Route::get('/alumnos/create', [AlumnoController::class, 'create'])->name('alumnos.create');
     Route::post('/alumnos', [AlumnoController::class, 'store'])->name('alumnos.store');
