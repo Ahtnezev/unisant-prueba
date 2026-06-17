@@ -12,6 +12,13 @@
     </div>
 @endif
 
+@if(session('success'))
+    <div class="alert alert-danger alert-primary fade show">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 <form method="GET" action="/alumnos" class="mb-3">
     <div class="row">
         <div class="col-md-4">
