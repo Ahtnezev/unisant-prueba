@@ -49,13 +49,49 @@
             <td>{{ $alumno->sede->nombre ?? 'N/A' }}</td>
             <td>{{ $alumno->estado }}</td>
             <td>
-                <a href="/alumnos/eliminar/{{ $alumno->id }}" class="btn btn-danger btn-sm">Eliminar</a>
+                <button type="button" class="btn btn-danger btn-sm"
+                        onclick="confirmDelete({{ $alumno->id }}, '{{ $alumno->nombre_completo }}')">
+                    <i class="fas fa-trash me-1"></i> Eliminar
+                </button>
+                <form id="delete-form-{{ $alumno->id }}"
+                    method="POST"
+                    action="{{ route('alumnos.destroy', $alumno->id) }}"
+                    style="display: none;">
+                    @csrf
+                    @method('DELETE')
+                </form>
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
 
+
+
 {{ $alumnos->links() }}
 
 @endsection
+
+@push('js')
+    <script>
+        function confirmDelete(id, nombre) {
+            Swal.fire({
+                title: '¿Eliminar alumno?',
+                html: `¿Estás seguro de que deseas eliminar a <strong>${nombre}</strong>?<br><br>Esta acción no se puede deshacer.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return new Promise((resolve) => {
+                        document.getElementById('delete-form-' + id).submit();
+                        resolve();
+                    });
+                }
+            });
+        }
+    </script>
+@endpush
