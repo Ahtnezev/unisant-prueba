@@ -13,4 +13,8 @@ class Sede extends Model
     {
         return $this->hasMany(Alumno::class, 'sede_id');
     }
+
+    public function scopeActivas() {
+        return $this->where('activa', 1)->where('nombre', '!=', '');
+    }
 }
