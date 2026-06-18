@@ -19,21 +19,29 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/alumnos', [AlumnoController::class, 'store'])->name('alumnos.store');
     Route::delete('/alumnos/eliminar/{id}', [AlumnoController::class, 'destroy'])->name('alumnos.destroy');
 
-    Route::get('/programas', [ProgramaController::class, 'index'])->name('programas.index');
-    Route::post('/programas', [ProgramaController::class, 'store'])->name('programas.store');
+    Route::middleware(['nivel:3'])->group(function() {
+        Route::get('/programas', [ProgramaController::class, 'index'])->name('programas.index');
+        Route::post('/programas', [ProgramaController::class, 'store'])->name('programas.store');
+    });
 
-    Route::get('/pagos', [PagoController::class, 'index'])->name('pagos.index');
-    Route::get('/pagos/create', [PagoController::class, 'create'])->name('pagos.create');
-    Route::post('/pagos', [PagoController::class, 'store'])->name('pagos.store');
+    Route::middleware(['nivel:1,2'])->group(function() {
+        Route::get('/pagos', [PagoController::class, 'index'])->name('pagos.index');
+        Route::get('/pagos/create', [PagoController::class, 'create'])->name('pagos.create');
+        Route::post('/pagos', [PagoController::class, 'store'])->name('pagos.store');
+    });
 
-    Route::get('/reportes/deudas', [ReporteController::class, 'exportarDeudas'])->name('reportes.deudas');
-    Route::post('/reportes/generar', [ReporteController::class, 'generarReporteAsync'])->name('reportes.generar');
+    Route::middleware(['nivel:1'])->group(function() {
+        Route::get('/reportes/deudas', [ReporteController::class, 'exportarDeudas'])->name('reportes.deudas');
+        Route::post('/reportes/generar', [ReporteController::class, 'generarReporteAsync'])->name('reportes.generar');
+    });
 
     Route::get('/api/buscar-alumnos', [ReporteController::class, 'buscarAlumnosGlobal'])->name('api.buscar');
 });
 
 Route::view('/login', 'auth.login')->name('login');
 Route::view('/register', 'auth.register')->name('register');
+
+// test xD
 Route::post('/logout', function () {
     auth()->logout();
     session()->invalidate();

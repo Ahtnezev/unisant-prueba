@@ -24,6 +24,7 @@
 
 - se agregan los indices en las tablas: alumnos(matricula, sede_id), pagos(matricula), inscripciones(alumno_id)
 - Se crea service de alumnoController para tener mayor legibilidad y mantenibilidad del codigo a futuro, se pasa logica al controller y despues se inyecta en el appServiceProvider
+- Se modifica `NivelMiddleware`, ahora segun el nivel del usuario que tenga asignado podra o no acceder a una pagina, segun como este definido en el `web.php`, problemas? sino existe un "puente" que intercepte estos request antes de llegar a su destino, cualquier usuario podria acceder donde desee, lo cual es problematico si tenemos vistas de pagos, etc
    
 ### Auth:
 
