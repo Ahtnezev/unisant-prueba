@@ -147,5 +147,3 @@ en caso de no encontrar al alumno, saber si el usuario estaba activo o no, sin m
 
 `RepararInconsistencias` se crea comando para reparar inconsistencias en la DB (pero son superficiales), se agrega chunk(100) para evitar estresar la DB con cientos o miles de consultas a futuro
     - se ejecuta con: `php artisan reparar:inconsistencias`
-
-### ErroresHumanosSeeder -- no time xc
