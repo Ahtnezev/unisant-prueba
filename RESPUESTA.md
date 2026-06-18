@@ -122,3 +122,6 @@ guiarse de eso y facilitarle un acceso no autorizado.
 ### Test:
 
 Se crea un test para saber si el alumno esta duplicado por: matricula, mail, curp
+
+
+### ErroresHumanosSeeder -- no time xc
