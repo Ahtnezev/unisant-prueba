@@ -10,7 +10,7 @@ class ProgramaController extends Controller
 {
     public function index()
     {
-        $programas = Programa::with('materias')->get();
+        $programas = Programa::activas()->with('materias')->get();
 
         foreach ($programas as $programa) {
             $programa->total_materias = $programa->materias->count();
