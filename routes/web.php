@@ -6,7 +6,6 @@ use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ReporteController;
-use App\Http\Controllers\Api\AlumnoApiController;
 
 Route::get('/', function () {
     return redirect('/login');

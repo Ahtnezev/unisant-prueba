@@ -130,7 +130,7 @@ class AlumnoService
         ];
     }
 
-        public function crearAlumno(array $data): array
+    public function crearAlumno(array $data): array
     {
         try {
             DB::beginTransaction();

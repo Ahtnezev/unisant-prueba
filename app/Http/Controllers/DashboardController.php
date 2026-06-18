@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
         // tambien se puede actualizar el cache cada que se cree o actualice un pago
         $promedioPago = Cache::remember('promedio_pago', 300, function () use ($pagos, $suma) {
-            return count($pagos) > 0 ? $suma / count($pagos) : 0;
+            return Pago::avg('monto') ?? 0;
         });
 
         $programasTop = Cache::remember('programas_top', 300, function () {
