@@ -117,3 +117,8 @@ guiarse de eso y facilitarle un acceso no autorizado.
 ### JOBS:
 
 - `GenerarReporteDeudasJob`, se agrega chunk de cada 200 registros, se manejan excepciones en caso que algo fallara se registra en el Log con los detalles del error, el chunk se utiliza para no saturar la DB de cientos o miles de operaciones por segundo
+
+
+### Test:
+
+Se crea un test para saber si el alumno esta duplicado por: matricula, mail, curp
