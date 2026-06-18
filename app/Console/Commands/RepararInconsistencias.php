@@ -45,13 +45,17 @@ class RepararInconsistencias extends Command
     private function cleanAlumnos(): void
     {
         DB::transaction(function () {
-            Alumno::whereNotNull('curp')->update([
-                'curp' => DB::raw("TRIM(curp)")
-            ]);
+            Alumno::whereNotNull('curp')->chunk(100, function ($alumnos) {
+                foreach($alumnos as $alumno) {
+                    $alumno->update(['curp' => trim($alumno->curp)]);
+                }
+            });
 
-            Alumno::whereNotNull('email')->update([
-                'email' => DB::raw("LOWER(TRIM(email))")
-            ]);
+            Alumno::whereNotNull('email')->chunk(100, function ($alumnos) {
+                foreach($alumnos as $alumno) {
+                    $alumno->update(['email' => trim($alumno->email)]);
+                }
+            });
 
             Alumno::whereNotNull('telefono')->update([
                 'telefono' => DB::raw("REGEXP_REPLACE(telefono, '[^0-9]', '')")
