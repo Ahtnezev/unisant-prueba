@@ -135,7 +135,9 @@ en caso de no encontrar al alumno, saber si el usuario estaba activo o no, sin m
 
 ### Test:
 
-`AlumnoDuplicadoTest`, se crea un test para saber si el alumno esta duplicado por: matricula, mail, curp
+- Para ejecutar un test en especifico usar: `php artisan test --filter <nombre_test>`
+- `AlumnoDuplicadoTest`, se crea un test para saber si el alumno esta duplicado por: matricula, mail, curp
+- `PagoValidationTest`, se crea test para validar pagos que no se acepten montos negativos
 
 
 ### Commands:

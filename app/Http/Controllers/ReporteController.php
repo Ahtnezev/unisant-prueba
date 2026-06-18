@@ -39,8 +39,15 @@ class ReporteController extends Controller
     {
         $q = $request->input('q', '');
 
-        $alumnos = Alumno::whereRaw("nombre_completo LIKE '%$q%' OR matricula LIKE '%$q%' OR curp LIKE '%$q%'")
-            ->get();
+        if (empty($q)) {
+            return response()->json([]);
+        }
+
+        $alumnos = Alumno::where('nombre_completo', 'LIKE', "%{$q}%")
+            ->orWhere('matricula', 'LIKE', "%{$q}%")
+            ->orWhere('curp', 'LIKE', "%{$q}%")
+            ->limit(50)
+            ->get(['id', 'nombre_completo', 'matricula', 'curp']);
 
         return response()->json($alumnos);
     }
